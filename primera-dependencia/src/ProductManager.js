@@ -116,3 +116,5 @@ await manager.deleteProduct(1);
 console.log( await manager.getProducts());
 }
 main()
+
+export default ProductManager;
