@@ -8,22 +8,28 @@ app.get("/Saludo", (req, res) => {
     res.send("Bienvenidos a Vixen!");
 });
 
-app.get("/users", (req, res) =>{
-    const { city } = req.query;
+app.get("/products", async (req, res) =>{
+    const products = await manager.getProducts();
 
-    if (city) {
-        res.send(users.filter((u) => u.city === city));
-    } else {
-        res.send(users);
+    const { limit } = req.query;
+
+    if (limit < 5) {
+        res.send(products);
     }
 });
 
-app.get("/users/:id", (req, res) => {
+app.get("/products/:id", async (req, res) => {
     const { id } = req.params;
 
-    const user = users.find((u) => u.id === id);
+    const products = await products.find((u) => u.id === id);
 
-    res.send(user);
+    if(!id){
+        return res
+        .status(404)
+        .send({error: `No existe el producto con ese ID ${id}` });
+    }
+
+    res.send(products);
 });
 
 app.listen(8080, () => {
