@@ -1,4 +1,5 @@
 import fs from "fs";
+
 class ProductManager {
     #path;
     #nextId = 0;
@@ -13,12 +14,12 @@ class ProductManager {
         const findProduct =  products.find((p) => p.id === idProducts);
         
         if (!findProduct) {
-            throw new Error(`Product with id ${this.#nextId} not found`);
+            return undefined
           }
           return findProduct;
     }
 
-    async addProducts(title, description, price, thumbnail, code, stock){
+    async addProducts(title, description, code, price, status, stock, category, thumbnail){
         
         const products = await this.getProducts();
         
@@ -29,10 +30,12 @@ class ProductManager {
                 id: this.#nextId,
                 title,
                 description,
-                price,
-                thumbnail,
                 code,
-                stock
+                price,
+                status,
+                stock,
+                category,
+                thumbnail
             };
 
             
@@ -83,18 +86,15 @@ class ProductManager {
     async deleteProduct(idProduct) {
         const products = await this.getProducts();
     
-        const updatedProducts = products.filter((p) => {
-          return p.id !== idProduct;
+        const deleteProduct = products.filter((p) => {
+        return p.id !== idProduct
         });
     
-        await fs.promises.writeFile(this.#path, JSON.stringify(updatedProducts));
-      }
+        await fs.promises.writeFile(this.#path, JSON.stringify(deleteProduct));
+    }
+
 
 }
 
-
-async function main() {
-}
-main()
 
 export default ProductManager;

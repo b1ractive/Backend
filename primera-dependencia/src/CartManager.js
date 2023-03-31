@@ -1,10 +1,10 @@
 import fs from "fs";
-
 class CartManager {
+    #path;
     #nextId = 0;
 
-    constructor() {
-        this.#path = "./carts.json"
+    constructor(path) {
+        this.#path = path
     }
 
     async addCart(){
@@ -17,11 +17,21 @@ class CartManager {
 
         const updateCarts = [...carts, newCart];
 
-        await fs.promises.writeFile(this.path, JSON.stringify(updateCarts));
+        await fs.promises.writeFile(this.#path, JSON.stringify(updateCarts));
 
         this.#nextId++;
 
         return newCart;
+    }
+
+    async getCarts() {
+        try{
+            const carts = await fs.promises.readFile(this.#path, "utf-8");
+
+            return JSON.parse(carts);
+        } catch (e) {
+            return [];
+        }
     }
 
     async addProductToCart(cartId, productId){
@@ -63,5 +73,7 @@ class CartManager {
         return this.getCartById(cartId);
     }
 }
+
+
 
 export default CartManager;
